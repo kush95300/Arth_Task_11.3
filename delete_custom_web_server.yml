@@ -1,0 +1,14 @@
+- hosts: webserver
+  vars_files:
+          - parameter.yml
+  tasks:
+          - package:
+                  name: "httpd"
+                  state: absent
+          - file:
+                  path: "/etc/httpd"
+                  state: absent
+          - file:
+                  path: "{{ server_root_path }}"
+                  state: absent
+

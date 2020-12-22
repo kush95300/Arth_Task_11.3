@@ -1,0 +1,52 @@
+- hosts: webserver
+  vars_files:
+          parameter.yml
+  tasks:
+          - package:
+                  name: "httpd"
+                  state: present
+          - name: "Custum Directory Root"
+            file:
+                  state: directory
+                  path: "{{ server_root_path }}"
+          - template : 
+                  dest: "/etc/httpd/conf.d/custom.conf"
+                  src: "setting.conf"
+            notify: "restart httpd"
+          - copy:
+                  dest: "{{ server_root_path }}/index.html"
+                  content: >
+                          <!DOCTYPE html>
+                          <html>
+                          <head>
+                          <meta name="viewport" content="width=device-width, initial-scale=1">
+                          <style>
+                          body {
+                                    background: #555;
+                                    }
+
+                                    .content {
+                                              max-width: 500px;
+                                                margin: auto;
+                                                  background: white;
+                                                    padding: 10px;
+                                                    }
+                                                    </style>
+                                                    </head>
+                                                    <body>
+                                                    <div class="content">
+                                                    <h1><center><b>Hi from kush Again.....</b></center></h1>
+                                                                              </div>
+
+                                                                              </body>
+                                                                              </html>
+          - service:
+                  name: "httpd"
+                  state: started
+                  enabled: yes
+  handlers:
+          - name: "restart httpd"
+            service:
+                    name: "httpd"
+                    state: reloaded
+
